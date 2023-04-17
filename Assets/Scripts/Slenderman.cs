@@ -52,16 +52,20 @@ public class Slenderman : MonoBehaviour
     private void SetDeathTimer()
     {
         int deathRange = 40;
+        int maxTarget = 1;
+        int minTarget = 0;
 
         if (Vector3.Distance(gameObject.transform.position, _player.transform.position) < deathRange)
         {
             _isDefault = false;
             _deathTime += Time.deltaTime;
+            _glitched?.Invoke(maxTarget);
         }
         else
         {
             _isDefault = true;
             _deathTime = 0;
+            _glitched?.Invoke(minTarget);
         }
     }
 
