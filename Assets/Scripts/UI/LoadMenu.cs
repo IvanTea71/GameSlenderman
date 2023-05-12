@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 
+[RequireComponent(typeof(VideoPlayer))]
 public class LoadMenu : MonoBehaviour
 {
     VideoPlayer _videoPlayer;
