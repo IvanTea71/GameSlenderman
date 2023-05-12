@@ -8,24 +8,24 @@ using UnityEngine.Video;
 [RequireComponent(typeof(VideoPlayer))]
 public class LoadMenu : MonoBehaviour
 {
-    VideoPlayer _videoPlayer;
+    private VideoPlayer _videoPlayer;
 
     void Start()
     {
         _videoPlayer = GetComponent<VideoPlayer>();
         _videoPlayer.Prepare();
 
-        _videoPlayer.loopPointReached += _videoPlayer_loopPointReached;
+        _videoPlayer.loopPointReached += VideoPlayerLoopPointReached;
 
-        Invoke("play", 0);
+        Invoke(nameof(Play), 0);
     }
 
-    private void _videoPlayer_loopPointReached(VideoPlayer source)
+    private void VideoPlayerLoopPointReached(VideoPlayer source)
     {
         MenuGame.Load();
     }
 
-    private void play()
+    private void Play()
     {
         _videoPlayer.Play();
     }

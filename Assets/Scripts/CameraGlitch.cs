@@ -7,6 +7,7 @@ using UnityEngine;
 public class CameraGlitch : MonoBehaviour
 {
     [SerializeField] private Slenderman _slenderman;
+
     private AnalogGlitch _cameraGlitch;
     private Coroutine _controlGlitch;
 
@@ -41,9 +42,12 @@ public class CameraGlitch : MonoBehaviour
 
         while (_cameraGlitch.scanLineJitter != target)
         {
-            _cameraGlitch.scanLineJitter = Mathf.MoveTowards(_cameraGlitch.scanLineJitter, target, recoveryRate * Time.deltaTime);
-            _cameraGlitch.horizontalShake = Mathf.MoveTowards(_cameraGlitch.horizontalShake, target, recoveryRate * Time.deltaTime);
-            _cameraGlitch.colorDrift = Mathf.MoveTowards(_cameraGlitch.colorDrift, target, recoveryRate * Time.deltaTime);
+            _cameraGlitch.scanLineJitter = 
+                Mathf.MoveTowards(_cameraGlitch.scanLineJitter, target, recoveryRate * Time.deltaTime);
+            _cameraGlitch.horizontalShake = 
+                Mathf.MoveTowards(_cameraGlitch.horizontalShake, target, recoveryRate * Time.deltaTime);
+            _cameraGlitch.colorDrift = 
+                Mathf.MoveTowards(_cameraGlitch.colorDrift, target, recoveryRate * Time.deltaTime);
 
             yield return null;
         }
