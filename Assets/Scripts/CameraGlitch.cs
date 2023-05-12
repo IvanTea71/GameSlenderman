@@ -6,12 +6,11 @@ using UnityEngine;
 [RequireComponent(typeof(AnalogGlitch))]
 public class CameraGlitch : MonoBehaviour
 {
-    [SerializeField] private float _scaleGlitch;
-    private Slenderman _slenderman;
+    [SerializeField] private Slenderman _slenderman;
     private AnalogGlitch _cameraGlitch;
     private Coroutine _controlGlitch;
 
-    private void Start()
+    private void Awake()
     {
         _cameraGlitch = GetComponent<AnalogGlitch>();
     }
@@ -40,12 +39,11 @@ public class CameraGlitch : MonoBehaviour
     {
         float recoveryRate = 0.1f;
 
-        while (_scaleGlitch != target)
+        while (_cameraGlitch.scanLineJitter != target)
         {
-            _scaleGlitch = Mathf.MoveTowards(_scaleGlitch, target, recoveryRate * Time.deltaTime);
-            _cameraGlitch.scanLineJitter = _scaleGlitch;
-            _cameraGlitch.horizontalShake = _scaleGlitch;
-            _cameraGlitch.colorDrift = _scaleGlitch;
+            _cameraGlitch.scanLineJitter = Mathf.MoveTowards(_cameraGlitch.scanLineJitter, target, recoveryRate * Time.deltaTime);
+            _cameraGlitch.horizontalShake = Mathf.MoveTowards(_cameraGlitch.horizontalShake, target, recoveryRate * Time.deltaTime);
+            _cameraGlitch.colorDrift = Mathf.MoveTowards(_cameraGlitch.colorDrift, target, recoveryRate * Time.deltaTime);
 
             yield return null;
         }

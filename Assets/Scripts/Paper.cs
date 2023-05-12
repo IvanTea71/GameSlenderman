@@ -14,12 +14,9 @@ public class Paper : MonoBehaviour
         remove => _reached.RemoveListener(value);
     }
     
-    public bool IsReached { get; private set; }
-
     public void TakePaper()
     {
         Destroy(gameObject);
-        IsReached = true;
         _player.IncreasScore();
         _reached?.Invoke();
     }

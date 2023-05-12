@@ -3,25 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SocialPlatforms.Impl;
+using IJunior.TypedScenes;
+using UnityEditor;
 
 public class Slenderman : MonoBehaviour
 {
-    [SerializeField] private Camera _deathCamera;
     [SerializeField] private Player _player;
     [SerializeField] private float _timer;
     [SerializeField] private float _deathTime;
+    [SerializeField] private int _currentZone;
     [SerializeField] private Point _currentPoint;
     [SerializeField] private GameObject[] _levels;
+    [SerializeField] private GameObject _deathVideo;
+    [SerializeField] private GameObject _deathRenderer;
 
-    private UnityEvent<float> _glitched;
-    private int _currentZone;
-    private bool _isDefault = true;
-
-    public event UnityAction<float> Glitched
-    {
-        add => _glitched.AddListener(value);
-        remove => _glitched.RemoveListener(value);
-    }
+    public event UnityAction<float> Glitched;   
 
     public void ChangeLocation(int zoneNumber)
     {
@@ -51,41 +47,44 @@ public class Slenderman : MonoBehaviour
 
     private void SetDeathTimer()
     {
-        int deathRange = 40;
+        int deathRange = 30;
         int maxTarget = 1;
         int minTarget = 0;
 
         if (Vector3.Distance(gameObject.transform.position, _player.transform.position) < deathRange)
-        {
-            _isDefault = false;
+        {            
             _deathTime += Time.deltaTime;
-            _glitched?.Invoke(maxTarget);
+            Glitched?.Invoke(maxTarget);
         }
         else
         {
-            _isDefault = true;
             _deathTime = 0;
-            _glitched?.Invoke(minTarget);
+            Glitched?.Invoke(minTarget);
         }
     }
 
     private void Teleporting(int score)
-    {        
-        if (score == 1)
+    {
+        int firstLevel = 0;
+        int secondLevel = 1;
+        int onePoint = 1;
+        int fourPoint = 4;
+
+        if (score == onePoint)
         {
-            CheckingLevel(score);
+            CheckingLevel(firstLevel);
         }
-        else if (score > 1)
+        else if (score == fourPoint)
         {
-            CheckingLevel(score);
-            _levels[score - 2].SetActive(false);
+            CheckingLevel(secondLevel);
+            _levels[firstLevel].SetActive(false);
         }
     }
-
-    private void CheckingLevel(int score) 
+    
+    private void CheckingLevel(int numberLevel) 
     {
-        _levels[score - 1].SetActive(true);
-        _levels[score - 1].TryGetComponent<Level>(out Level level);
+        _levels[numberLevel].SetActive(true);
+        _levels[numberLevel].TryGetComponent<Level>(out Level level);
         ChangePoint(level);
     }
     
@@ -93,16 +92,8 @@ public class Slenderman : MonoBehaviour
     {
         int firstPoint = 0;
 
-        if (_isDefault == true)
-        {
-            _currentPoint = level._zones[_currentZone]._childrenPoints[Random.Range(firstPoint, level._zones[_currentZone]._childrenPoints.Length)];
-            gameObject.transform.position = _currentPoint.transform.position;
-        }
-        else
-        {
-            _currentPoint = _player._pointsBehindPlayer[Random.Range(firstPoint, _player._pointsBehindPlayer.Length)];
-            gameObject.transform.position = _currentPoint.transform.position;
-        }
+        _currentPoint = level._zones[_currentZone]._childrenPoints[Random.Range(firstPoint, level._zones[_currentZone]._childrenPoints.Length)];
+        gameObject.transform.position = _currentPoint.transform.position;        
     }
     
     private void Play()
@@ -116,8 +107,8 @@ public class Slenderman : MonoBehaviour
         }
         else 
         {
-            _deathCamera.enabled = true;
-            Destroy(_player);
+            _deathVideo.SetActive(true);
+            _deathRenderer.SetActive(true);
         }
 
         gameObject.transform.LookAt(_player.transform);

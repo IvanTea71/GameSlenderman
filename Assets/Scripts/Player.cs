@@ -1,3 +1,4 @@
+using IJunior.TypedScenes;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,12 +16,10 @@ public class Player : MonoBehaviour
 
     public event UnityAction<int> ScoreChanged;
 
-    public Point[] _pointsBehindPlayer { get; private set; }
     public int _score { get; private set; }
 
     private void Start()
     {
-        _pointsBehindPlayer = gameObject.GetComponentsInChildren<Point>();
         _score = 0;
     }
 
@@ -53,5 +52,10 @@ public class Player : MonoBehaviour
     {
         _score++;
         ScoreChanged?.Invoke(_score);
+
+        if(_score == 8)
+        {
+            MenuGame.Load();
+        }
     }
 }
