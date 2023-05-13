@@ -18,15 +18,15 @@ public class CameraGlitch : MonoBehaviour
 
     private void OnEnable()
     {
-       _slenderman.Glitched += CoroutineControl;
+       _slenderman.Glitched += OnGlitched;
     }
 
     private void OnDisable()
     {
-        _slenderman.Glitched -= CoroutineControl;
+        _slenderman.Glitched -= OnGlitched;
     }
 
-    public void CoroutineControl(float target)
+    public void OnGlitched(float target)
     {
         if (_controlGlitch != null)
         {

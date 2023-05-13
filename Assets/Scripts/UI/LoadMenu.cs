@@ -15,12 +15,12 @@ public class LoadMenu : MonoBehaviour
         _videoPlayer = GetComponent<VideoPlayer>();
         _videoPlayer.Prepare();
 
-        _videoPlayer.loopPointReached += VideoPlayerLoopPointReached;
+        _videoPlayer.loopPointReached += OnLoopPointReached;
 
         Invoke(nameof(Play), 0);
     }
 
-    private void VideoPlayerLoopPointReached(VideoPlayer source)
+    private void OnLoopPointReached(VideoPlayer source)
     {
         MenuGame.Load();
     }

@@ -19,14 +19,14 @@ public class Slenderman : MonoBehaviour
 
     public event UnityAction<float> Glitched;   
 
-    public void ChangeLocation(int zoneNumber)
-    {
-        _currentZone = zoneNumber;
-    }
-
     private void Update()
     {
         Play();        
+    }
+
+    public void ChangeLocation(int zoneNumber)
+    {
+        _currentZone = zoneNumber;
     }
 
     private void SetTeleportTimer()
