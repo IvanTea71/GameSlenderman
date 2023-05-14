@@ -42,7 +42,7 @@ public class Player : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    paper.TakePaper();
+                    paper.Take();
                 }
             }
         }

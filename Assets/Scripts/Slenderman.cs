@@ -9,13 +9,16 @@ using UnityEditor;
 public class Slenderman : MonoBehaviour
 {
     [SerializeField] private Player _player;
-    [SerializeField] private float _timer;
     [SerializeField] private float _deathTime;
     [SerializeField] private int _currentZone;
     [SerializeField] private Point _currentPoint;
     [SerializeField] private GameObject[] _levels;
     [SerializeField] private GameObject _deathVideo;
     [SerializeField] private GameObject _deathRenderer;
+
+    private static int _waitSeconds = 7;
+    private Coroutine _teleport;
+    private WaitForSeconds _waitForSeconds = new WaitForSeconds(_waitSeconds);
 
     public event UnityAction<float> Glitched;   
 
@@ -24,24 +27,34 @@ public class Slenderman : MonoBehaviour
         Play();        
     }
 
+    private void Start()
+    {
+        CoroutineControl();
+    }
+
     public void ChangeLocation(int zoneNumber)
     {
         _currentZone = zoneNumber;
     }
 
-    private void SetTeleportTimer()
+    private void CoroutineControl()
     {
-        int stayTime = 5;
-
-        if (_timer < stayTime)
+        if (_teleport != null)
         {
-            _timer += Time.deltaTime;
+            StopCoroutine(_teleport);
         }
-        else
-        {
-           Teleporting(_player._score);
 
-            _timer = 0;
+        _teleport = StartCoroutine(Detain());
+    }
+
+    private IEnumerator Detain()
+    {
+        bool isPlaying = true;
+
+        while (isPlaying)
+        {
+            Teleport(_player._score);
+            yield return _waitForSeconds;
         }
     }
 
@@ -63,7 +76,7 @@ public class Slenderman : MonoBehaviour
         }
     }
 
-    private void Teleporting(int score)
+    private void Teleport(int score)
     {
         int firstLevel = 0;
         int secondLevel = 1;
@@ -72,16 +85,16 @@ public class Slenderman : MonoBehaviour
 
         if (score == onePoint)
         {
-            CheckingLevel(firstLevel);
+            SwitchLevel(firstLevel);
         }
         else if (score == fourPoint)
         {
-            CheckingLevel(secondLevel);
+            SwitchLevel(secondLevel);
             _levels[firstLevel].SetActive(false);
         }
     }
     
-    private void CheckingLevel(int numberLevel) 
+    private void SwitchLevel(int numberLevel) 
     {
         _levels[numberLevel].SetActive(true);
         _levels[numberLevel].TryGetComponent<Level>(out Level level);
@@ -102,7 +115,6 @@ public class Slenderman : MonoBehaviour
 
         if (_deathTime < time)
         {
-            SetTeleportTimer();
             SetDeathTimer();
         }
         else 

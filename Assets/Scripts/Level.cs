@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-    public Zone[] _zones;
+    public Zone[] _zones { get; private set; }
 
     private void Awake()
     {

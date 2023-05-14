@@ -14,7 +14,7 @@ public class Paper : MonoBehaviour
         remove => _reached.RemoveListener(value);
     }
     
-    public void TakePaper()
+    public void Take()
     {
         Destroy(gameObject);
         _player.IncreasScore();
